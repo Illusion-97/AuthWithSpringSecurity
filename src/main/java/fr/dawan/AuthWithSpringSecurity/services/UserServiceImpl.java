@@ -1,18 +1,22 @@
 package fr.dawan.AuthWithSpringSecurity.services;
 
 import fr.dawan.AuthWithSpringSecurity.dtos.UserDto;
+import fr.dawan.AuthWithSpringSecurity.dtos.UserSecurity;
 import fr.dawan.AuthWithSpringSecurity.mappers.UserMapper;
 import fr.dawan.AuthWithSpringSecurity.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     private final UserRepository repository;
@@ -36,5 +40,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public UserSecurity loadUserByUsername(String email) throws UsernameNotFoundException {
+        return repository.findByEmail(email)
+                .map(UserSecurity::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

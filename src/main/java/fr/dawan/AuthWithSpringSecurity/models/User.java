@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class User implements Serializable {
 
     @Id
@@ -22,7 +24,9 @@ public class User implements Serializable {
     @Version
     private int version;
 
+    @Column(unique = true)
     private String username;
+    @Column(unique = true)
     private String email;
     private String password;
     private boolean active;

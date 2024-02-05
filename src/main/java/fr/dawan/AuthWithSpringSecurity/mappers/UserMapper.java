@@ -1,5 +1,6 @@
 package fr.dawan.AuthWithSpringSecurity.mappers;
 
+import fr.dawan.AuthWithSpringSecurity.dtos.RegisterDto;
 import fr.dawan.AuthWithSpringSecurity.dtos.UserDto;
 import fr.dawan.AuthWithSpringSecurity.models.User;
 import org.mapstruct.Mapper;
@@ -8,4 +9,5 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
     UserDto toDto(User user);
     User toEntity(UserDto dto);
+    User toEntity(RegisterDto dto);
 }
