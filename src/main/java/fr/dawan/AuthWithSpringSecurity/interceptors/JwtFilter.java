@@ -1,5 +1,6 @@
 package fr.dawan.AuthWithSpringSecurity.interceptors;
 
+import fr.dawan.AuthWithSpringSecurity.conf.SecurityConfig;
 import fr.dawan.AuthWithSpringSecurity.tools.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,15 +17,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
-//@Component
+@Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final UserDetailsService service;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(!request.getMethod().equals("OPTIONS")) { // On ne bloque jamais une requête OPTIONS
+        if(!request.getMethod().equals("OPTIONS") && isInterceptedUri(request.getRequestURI())) { // On ne bloque jamais une requête OPTIONS
             String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             if(authHeader == null || !authHeader.startsWith("Bearer ")) {
                 throw new ServletException("Invalid Authorization");
@@ -45,5 +47,11 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request,response);
+    }
+
+    private boolean isInterceptedUri(String URI) {
+        return Arrays.stream(SecurityConfig.AUTHORIZED_URL)
+                .map(url -> url.replace("**",".*"))
+                .noneMatch(URI::matches);
     }
 }

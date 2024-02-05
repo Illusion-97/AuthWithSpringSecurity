@@ -6,24 +6,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("users")
 public class UserController {
     private final UserService service;
 
+    @GetMapping
     ResponseEntity<Page<UserDto>> findAll(Pageable pageable){
         Page<UserDto> all = service.findAll(pageable);
         return all.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(all);
     }
-    ResponseEntity<UserDto> findById(long id){
+    @GetMapping("{id}")
+    ResponseEntity<UserDto> findById(@PathVariable long id){
         return ResponseEntity.of(service.findById(id));
     }
-    ResponseEntity<UserDto> saveOrUpdate(UserDto dto){
+    @PostMapping
+    //@PutMapping
+    ResponseEntity<UserDto> saveOrUpdate(@RequestBody UserDto dto){
         return ResponseEntity.ok(service.saveOrUpdate(dto));
     }
-    void deleteById(long id){
+    @DeleteMapping("{id}")
+    void deleteById(@PathVariable long id){
         service.deleteById(id);
     }
 }
