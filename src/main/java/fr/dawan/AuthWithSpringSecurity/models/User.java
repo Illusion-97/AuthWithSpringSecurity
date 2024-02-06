@@ -1,5 +1,6 @@
 package fr.dawan.AuthWithSpringSecurity.models;
 
+import fr.dawan.AuthWithSpringSecurity.generic.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,14 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class User implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Version
-    private int version;
+public class User extends BaseEntity implements Serializable {
 
     @Column(unique = true)
     private String username;
