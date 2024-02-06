@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,4 +31,7 @@ public class User implements Serializable {
     private String email;
     private String password;
     private boolean active;
+
+    @ElementCollection
+    private List<Role> roles;
 }

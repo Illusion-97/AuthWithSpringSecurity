@@ -2,22 +2,29 @@ package fr.dawan.AuthWithSpringSecurity.dtos;
 
 import fr.dawan.AuthWithSpringSecurity.models.User;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
-@RequiredArgsConstructor
 @Getter
 public class UserSecurity implements UserDetails {
     private final User user;
+    private final Collection<? extends GrantedAuthority> roles;
+    public UserSecurity(User user) {
+        this.user = user;
+        // Tant qu'il n'y a pas eu un appel EXPLICITE à une relation
+        roles = user.getRoles().stream()
+                .map(Enum::name)
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("PUBLIC"));
+        return roles;
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +29,7 @@ public class UserController {
     ResponseEntity<UserDto> saveOrUpdate(@RequestBody UserDto dto){
         return ResponseEntity.ok(service.saveOrUpdate(dto));
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
     void deleteById(@PathVariable long id){
         service.deleteById(id);

@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 String username = JwtUtils.extractUsername(token);
                 if(username != null) {
                     UserDetails userDetails = service.loadUserByUsername(username);
+                    System.out.println("\u001B[36mTransaction end\u001B[0m");
                     // À partir de ce stade, Le token JWT a rempli sa fonction (Transmettre un 'username' pour identifier un utilisateur en base).
                     // Il faut à présent un token utilisable par SpringSecurity
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());

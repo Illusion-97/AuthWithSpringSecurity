@@ -4,10 +4,10 @@ import fr.dawan.AuthWithSpringSecurity.dtos.UserDto;
 import fr.dawan.AuthWithSpringSecurity.dtos.UserSecurity;
 import fr.dawan.AuthWithSpringSecurity.mappers.UserMapper;
 import fr.dawan.AuthWithSpringSecurity.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
 
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserSecurity loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("\u001B[36mTransaction start\u001B[0m");
         return repository.findByEmail(email)
                 .map(UserSecurity::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
